@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Excel Import and Datatables
  * Plugin URI:
- * Description: Pulls in a excel file and creates a list of the data.
+ * Description: Import an Excel file and using a shortcode, output a table of data on the frontend.
  * Version: 1.0.0
  * Author: Matt Guthrie
  * Author URI: http://www.mattguthrie.co
@@ -11,26 +11,28 @@
 
 define('EXCEL_IMPORT_AND_DATATABLES', '1.0.0');
 
-if (!class_exists('name_here')) :
-    class name_here {
+if (!class_exists('datatable_list')) :
+    class datatable_list {
         function init() {
             //includes
-            // include_one('includes/');
+            include_once('includes/data_admin.php');
+            include_once('includes/data_public.php');
         }
     }
 
-    function name_here() {
+    function datatable_list() {
         global $plugin_data;
         if(!isset($plugin_data)) {
-            $plugin_data = new name_here();
+            $plugin_data = new datatable_list();
             $plugin_data->init();
         }
     }
 
-    function name_here_active() {
+    function datatables_list_activate() {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
-        $tablename = $wpdb->prefix . "table_name_here";
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+        $tablename = $wpdb->prefix . "datatables_data";
         $sql = "CREATE TABLE $tablename (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             manufacturer varchar(255) NOT NULL,
@@ -44,8 +46,8 @@ if (!class_exists('name_here')) :
         dbDelta($sql);
     }
 
-    register_activation_hook(__FILE__, 'name_here_activate');
+    register_activation_hook(__FILE__, 'datatables_list_activate');
 
-    name_here();
+    datatable_list();
 
 endif;
